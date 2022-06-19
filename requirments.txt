@@ -33,3 +33,4 @@ tensorflow-io-gcs-filesystem==0.26.0
 tensorflow-probability==0.17.0
 tf-agents==0.13.0
 tqdm==4.64.0
+pika

@@ -1,3 +1,4 @@
+from data_model.activity import activity_from_str
 from util.Singleton import Singleton
 import pika
 import sys
@@ -34,6 +35,7 @@ class RabbitMQService(metaclass=Singleton):
                                    auto_ack=True,
                                    on_message_callback=callback)
         print("Subscribed to Queue: ", queue)
+        self.channel.start_consuming()
         return {}
 
     def send(self, queue, message):

@@ -6,3 +6,4 @@ if __name__ == '__main__':
     ser.init()
     # time.sleep(5)
     ser.subscribe('test', ser.new_activity_callback)
+    ser.start_consuming()

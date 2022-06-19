@@ -6,3 +6,4 @@ service-account-file.json
 db/activity_cluster.db/
 db/activity_user.db/
 db/cluster_feature.db/
+db/test.db/

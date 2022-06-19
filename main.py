@@ -1,9 +1,15 @@
-from util.RabbitMQ.RabbitMQ import RabbitMQService
-import time
+from subscribers import new_activity_callback, record_result_callback, get_feed_callback
+from services import RabbitMQService
 
 if __name__ == '__main__':
-    ser = RabbitMQService()
-    ser.init()
+    rabbitMQService = RabbitMQService()
+    rabbitMQService.init()
     # time.sleep(5)
-    ser.subscribe('test', ser.new_activity_callback)
-    ser.start_consuming()
+    rabbitMQService.subscribe(
+        'activity', new_activity_callback)
+    rabbitMQService.subscribe(
+        'engagement', record_result_callback)
+    rabbitMQService.subscribe(
+        'feed', get_feed_callback)
+
+    rabbitMQService.start_consuming()

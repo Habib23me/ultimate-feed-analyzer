@@ -10,8 +10,12 @@ from data_model.activity import activity_from_str
 #   user_id: 84c3e94e-ce0d-4721-8443-370b0325abd0,
 #   score: 0.8,
 # }
+
 def new_activity_callback(ch, method, properties, body):
-    print(" [x] Received %r" % body)
+    print(type(body.decode()))
+    print(" [x] Received %r" % body.decode())
+    activity: Activity = activity_from_str(body.decode())
+    analyseActivity(activity)
 
 
 # {
@@ -32,10 +36,3 @@ def record_result_callback(ch, method, properties, body):
 
     env = EpsilonGreedyEnvironment()
     env.record_result(parsed_body['activity_id'], parsed_body['reward'])
-
-
-def new_activity_callback(ch, method, properties, body):
-    print(type(body.decode()))
-    print(" [x] Received %r" % body.decode())
-    activity: Activity = activity_from_str(body.decode())
-    analyseActivity(activity)

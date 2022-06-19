@@ -10,6 +10,6 @@ if __name__ == '__main__':
     rabbitMQService.subscribe(
         'engagement', record_result_callback)
     rabbitMQService.subscribe(
-        'feed', get_feed_callback)
+        'feed_request', get_feed_callback)
 
     rabbitMQService.start_consuming()

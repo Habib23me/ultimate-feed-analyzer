@@ -3,6 +3,7 @@ import json
 from data_model.activity import *
 from services.analyzer import *
 from data_model.activity import activity_from_str
+from services.rabbitmq import RabbitMQService
 
 
 # {
@@ -12,17 +13,25 @@ from data_model.activity import activity_from_str
 # }
 
 def new_activity_callback(ch, method, properties, body):
-    print(type(body.decode()))
     print(" [x] Received %r" % body.decode())
     activity: Activity = activity_from_str(body.decode())
-    analyseActivity(activity)
+    analyzed_data=analyseActivity(activity)
+    # implement by Habib
+    # get cluster 
+    # record result to database
+    
 
 
 # {
 #   user_id: 84c3e94e-ce0d-4721-8443-370b0325abd0,
 # }
 def get_feed_callback(ch, method, properties, body):
-    print(" [x] Received %r" % body)
+    print(" [x] Received %r" % body.decode())
+    parsed_body = json.loads(body)
+    # implement by fitsum
+    feed = [];
+    # get_feed(parsed_body['user_id'])
+    RabbitMQService().send('feed_response', feed)
 
 
 # {
@@ -31,8 +40,10 @@ def get_feed_callback(ch, method, properties, body):
 #   reward: 0.8,
 # }
 def record_result_callback(ch, method, properties, body):
-    print(" [x] Received %r" % body)
+    print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)
+    # implement by Habib
+    # record_result(parsed_body['activity_id'], parsed_body['user_id'], parsed_body['score'])
 
     env = EpsilonGreedyEnvironment()
-    env.record_result(parsed_body['activity_id'], parsed_body['reward'])
+    env.record_result(parsed_body['activity_id'], parsed_body['score'])

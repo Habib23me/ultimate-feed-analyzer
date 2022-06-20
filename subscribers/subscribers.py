@@ -4,7 +4,7 @@ from data_model.activity import *
 from services.analyzer import *
 from data_model.activity import activity_from_str
 from services.cluster_features import predictCluster
-from services.database import ActivityClusterDatabaseService, ActivityUserDatabaseService
+from services.database import ActivityClusterDatabaseService, ActivityUserDatabaseService,ClusterFeatureDatabaseService
 from services.rabbitmq import RabbitMQService
 
 
@@ -22,6 +22,8 @@ def new_activity_callback(ch, method, properties, body):
     analyzed_data = analyseActivity(activity)
     for data in analyzed_data:
         data.cluster = predictCluster(data.feature)
+        features= ClusterFeatureDatabaseService().getFeaturesByClusterId(data.cluster);
+        print(features);
         ActivityClusterDatabaseService().put(data.to_dict())
 
 # {

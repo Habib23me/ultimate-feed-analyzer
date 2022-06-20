@@ -64,7 +64,7 @@ class EpsilonGreedyEnvironment(BaseEnvironment):
         # parameter to control exploration vs exploitation
         self.epsilon = epsilon
 
-    def select_item(self):
+    def select_item(self, user_id=None):
 
         # decide to explore or exploit
         if np.random.uniform() < self.epsilon:  # explore

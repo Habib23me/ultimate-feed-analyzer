@@ -19,11 +19,15 @@ class DatabaseService(metaclass=Singleton):
 
     def get(self, key):
         value = self.db.get(key.encode('utf-8'))
+        if(value == None):
+            return None
         return convert_byte_string_to_json(value)
 
     def get_all(self):
         # get all keys from db
         values = list(self.db.get_iter())
+        if (values == None) or (len(values) == 0):
+            return []
         return list(map(self.tuple_to_json, values))
 
     def put(self, value, key=None):
@@ -32,6 +36,10 @@ class DatabaseService(metaclass=Singleton):
         self.db.put(key.encode('utf-8'), convert_json_to_byte_string(value))
 
         return key
+
+    def close(self):
+        self.db.close()
+        print("Closed Database Service")
 
 
 class ActivityClusterDatabaseService(DatabaseService):
@@ -63,7 +71,15 @@ class ActivityUserDatabaseService(DatabaseService):
     def putOrUpdate(self, value, key=None):
         # TODO (Fitsum): implement this
         if(key == None):
-            key = str(time())
+            key = value['activityId'] + '_' + value['userId']
+
+        old_value = self.get(key)
+        if(old_value == None):
+            self.put(value, key)
+        else:
+            old_value['score'] += value['score']
+            self.put(old_value, key)
+
         self.db.put(key.encode('utf-8'), convert_json_to_byte_string(value))
 
         return key

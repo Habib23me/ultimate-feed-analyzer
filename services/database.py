@@ -56,11 +56,11 @@ class ClusterFeatureDatabaseService(DatabaseService):
         super(ClusterFeatureDatabaseService, self).__init__(
             db_path=os.environ['DB_CLUSTER_FEATURE_LOC'])
 
-    def getFeaturesByClusterId(self, clusterId: int):
-        return list(filter(lambda x: x['clusterId'] == clusterId, self.get_all()))
+    def getFeaturesByClusterId(self, cluster: int):
+        return list(filter(lambda x: x['cluster'] == cluster, self.get_all()))
 
-    def getClusterIdForFeature(self, feature: str):
-        return list(filter(lambda x: x['feature'] == feature, self.get_all()))
+    def getClusterIdForFeature(self, cfs, feature: str):
+        return list(filter(lambda x: x['feature'] == feature, cfs))[0]['cluster']
 
 
 class ActivityUserDatabaseService(DatabaseService):
@@ -69,7 +69,6 @@ class ActivityUserDatabaseService(DatabaseService):
             os.environ['DB_ACTIVITY_USER_LOC'])
 
     def putOrUpdate(self, value, key=None):
-        # TODO (Fitsum): implement this
         if(key == None):
             key = value['activityId'] + '_' + value['userId']
 
@@ -83,3 +82,9 @@ class ActivityUserDatabaseService(DatabaseService):
         self.db.put(key.encode('utf-8'), convert_json_to_byte_string(value))
 
         return key
+
+
+class RewardsDatabaseService(DatabaseService):
+    def __init__(self, ):
+        super(ClusterFeatureDatabaseService, self).__init__(
+            db_path=os.environ['DB_REWARDS_LOC'])

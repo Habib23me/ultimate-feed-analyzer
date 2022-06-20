@@ -48,6 +48,7 @@ def get_feed_callback(ch, method, properties, body):
 def record_result_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)
-    ActivityUserDatabaseService().putOrUpdate(parsed_body,parsed_body['activityId']+"_"+parsed_body['userId'])
+    ActivityUserDatabaseService().putOrUpdate(
+        parsed_body, parsed_body['activityId']+"_"+parsed_body['userId'])
     env = EpsilonGreedyEnvironment()
-    env.record_result(parsed_body['activityId'], parsed_body['score'])
+    env.record_result(None, parsed_body['activityId'], parsed_body['score'])

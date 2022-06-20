@@ -29,7 +29,7 @@ class RabbitMQService(metaclass=Singleton):
         print("Connected to RabbitMQ Service")
 
     def subscribe(self, queue, callback):
-        self.channel.queue_declare(queue=queue)
+        self.channel.queue_declare(queue=queue, durable=True)
         self.channel.basic_consume(
             queue=queue, auto_ack=True, on_message_callback=callback)
         print("Subscribed to Queue: ", queue)

@@ -64,9 +64,9 @@ class ClusterFeatureDatabaseService(DatabaseService):
 
 
 class ActivityUserDatabaseService(DatabaseService):
-    def __init__(self, ):
+    def __init__(self):
         super(ActivityUserDatabaseService, self).__init__(
-            os.environ['DB_ACTIVITY_USER_LOC'])
+            db_path=os.environ['DB_ACTIVITY_USER_LOC'])
 
     def putOrUpdate(self, value, key=None):
         if(key == None):

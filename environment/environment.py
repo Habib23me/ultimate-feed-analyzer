@@ -1,27 +1,22 @@
 import numpy as np
 from tqdm import tqdm
-
+import pickle
 from util import Singleton
 
 
 class BaseEnvironment(metaclass=Singleton):
 
-    def __init__(self, rewards, item_col_name, visitor_col_name, reward_col_name, random_seed=1):
+    def __init__(self, rewards, clusters, item_col_name, visitor_col_name, random_seed=1):
 
         np.random.seed(random_seed)
 
         self.rewards = rewards
         self.item_col_name = item_col_name
         self.visitor_col_name = visitor_col_name
-        self.reward_col_name = reward_col_name
 
         # items under test
-        self.items = self.rewards[self.item_col_name].unique()
+        self.items = clusters
         self.n_items = len(self.items)
-
-        # visitors in the historical rewards (e.g., from ratings df)
-        self.visitors = self.rewards[self.visitor_col_name].unique()
-        self.n_visitors = len(self.visitors)
 
         # number of times each item has been sampled (previously n_sampled)
         self.n_item_samples = np.zeros(self.n_items)
@@ -29,10 +24,29 @@ class BaseEnvironment(metaclass=Singleton):
         # fraction of time each item has resulted in a reward (previously movie_clicks)
         self.n_item_rewards = np.zeros(self.n_items)
 
+    def reset(self):
+        # number of times each item has been sampled (previously n_sampled)
+        self.n_item_samples = np.zeros(self.n_items)
+
+        # fraction of time each item has resulted in a reward (previously movie_clicks)
+        self.n_item_rewards = np.zeros(self.n_items)
+
+    def save_state(self):
+
+        pickle.dump((self.items, self.n_item_samples, self.n_item_rewards),
+                    open('rewards.pkl', 'wb'))
+
+    def load_state(self):
+        self.items, self.n_item_samples, self.n_item_rewards = pickle.load(
+            open('rewards.pkl', 'rb'))
+
+    def get_state(self):
+        return self.items, self.n_item_samples, self.n_item_rewards
+
     def select_item(self):
         return np.random.randint(self.n_items)
 
-    def record_result(self, item_idx, reward):
+    def record_result(self, user_idx, item_idx, reward):
 
         self.n_item_samples[item_idx] += 1
 
@@ -43,14 +57,14 @@ class BaseEnvironment(metaclass=Singleton):
 
 class EpsilonGreedyEnvironment(BaseEnvironment):
 
-    def __init__(self, epsilon, rewards, item_col_name, visitor_col_name, reward_col_name):
-        super(EpsilonGreedyEnvironment, self).__init__(rewards,
-                                                       item_col_name, visitor_col_name, reward_col_name)
+    def __init__(self, epsilon, rewards, clusters, item_col_name, visitor_col_name, ):
+        super(EpsilonGreedyEnvironment, self).__init__(rewards, clusters,
+                                                       item_col_name, visitor_col_name)
 
         # parameter to control exploration vs exploitation
         self.epsilon = epsilon
 
-    def select_item(self):
+    def select_item(self, user_id=None):
 
         # decide to explore or exploit
         if np.random.uniform() < self.epsilon:  # explore

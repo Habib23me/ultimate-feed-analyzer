@@ -35,9 +35,11 @@ def get_feed_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)
     # implement by fitsum
-    cluster = 1
+    cluster = EpsilonGreedyEnvironment().select_item(parsed_body['userId'])
+    # cluster = 1
     feed = ActivityClusterDatabaseService().getActivitiesByCluster(cluster)
-    RabbitMQService().send('feed_response', {"data":feed,"userId":parsed_body['userId']})
+    RabbitMQService().send('feed_response', json.dumps({
+        "data": feed, "userId": parsed_body['userId']}))
 
 
 # {
@@ -54,6 +56,10 @@ def record_result_callback(ch, method, properties, body):
         "activityId": parsed_body['activity_id'],
         "userId": parsed_body['actor'],
         "score": parsed_body['score']
-    },parsed_body['activity_id']+"_"+parsed_body['actor'])
-    # env = EpsilonGreedyEnvironment()
-    # env.record_result(parsed_body['activityId'], parsed_body['score'])
+    }, parsed_body['activity_id']+"_"+parsed_body['actor'])
+    env = EpsilonGreedyEnvironment()
+    ActivityClusterDatabaseService().getActivityCluster(
+        parsed_body['activityId'])
+    env.record_result(None, ActivityClusterDatabaseService().getActivityCluster(
+        parsed_body['activityId']), parsed_body['score'])
+    env.save_state()

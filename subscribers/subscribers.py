@@ -3,6 +3,8 @@ import json
 from data_model.activity import *
 from services.analyzer import *
 from data_model.activity import activity_from_str
+from services.cluster_features import predictCluster
+from services.database import ActivityClusterDatabaseService
 from services.rabbitmq import RabbitMQService
 
 
@@ -16,6 +18,10 @@ def new_activity_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     activity: Activity = activity_from_str(body.decode())
     analyzed_data=analyseActivity(activity)
+    for data in analyzed_data:
+        data.cluster=predictCluster(data.feature)
+        # ActivityClusterDatabaseService()
+
     # implement by Habib
     # get cluster 
     # record result to database

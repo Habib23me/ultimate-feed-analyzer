@@ -1,14 +1,6 @@
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
 from tqdm import tqdm
 import pandas as pd
-import numpy as np
-import joblib as joblib
-import csv
-from sklearn.metrics import silhouette_score
-from db.ActivityUserStore import ActivityUserStore, ActivityUser
 from services.database import ActivityUserDatabaseService
 
 def dataLoader(path):

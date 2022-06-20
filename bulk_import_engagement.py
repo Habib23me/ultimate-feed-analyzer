@@ -23,8 +23,8 @@ for index, row in tqdm(data.iterrows(),bar_format='{l_bar}{bar:10}{r_bar}{bar:-1
     # au = ActivityUser(str(row['vibeId']), str(row['userId']), 1)
     # activityUserStore.putActivityUser(au)
     ActivityUserDatabaseService().put({
-        "activity_id":row['vibeId'],
-        "user_id":row['userId'],
+        "activityId":row['vibeId'],
+        "userId":row['userId'],
         "score":1,
         },
         row['vibeId']+"_"+row['userId'])

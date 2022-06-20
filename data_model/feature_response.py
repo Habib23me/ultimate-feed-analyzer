@@ -3,15 +3,15 @@ import json
 
 
 class FeatureResponse:
-  def __init__(self, activity_id, feature,score,cluster=None):
-    self.activity_id = activity_id
+  def __init__(self, activityId, feature,score,cluster=None):
+    self.activityId = activityId
     self.score=score
     self.feature=feature
     self.cluster=cluster
     
   def to_dict(self) -> dict:
         result: dict = {}
-        result["activity_id"] = from_str(self.activity_id)
+        result["activityId"] = from_str(self.activityId)
         result["score"] = from_float(self.score)
         result["feature"] = from_str(self.feature)
         result["cluster"]= from_int(self.cluster)

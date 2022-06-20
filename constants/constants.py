@@ -1,0 +1,5 @@
+ACTIVITY_ID = "activity_id"
+FEATURE = "feature"
+CLUSTER = "cluster"
+SCORE = "score"
+USER_ID = "userId"

@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from util import *
 import rocksdb3
-from time import time
+import uuid
 # from util.helpers import *
 
 
@@ -28,13 +28,13 @@ class DatabaseService(metaclass=Singleton):
 
     def put(self, value, key=None):
         if(key == None):
-            key = str(time())
+            key = str(uuid.uuid4())
         self.db.put(key.encode('utf-8'), convert_json_to_byte_string(value))
 
         return key
 
 
-class ActivityClusterDatabaseService(DatabaseService, metaclass=Singleton):
+class ActivityClusterDatabaseService(DatabaseService):
     def __init__(self):
         super(ActivityClusterDatabaseService, self).__init__(
             db_path=os.environ['DB_ACTIVITY_CLUSTER_LOC'])
@@ -57,7 +57,7 @@ class ClusterFeatureDatabaseService(DatabaseService):
 
 class ActivityUserDatabaseService(DatabaseService):
     def __init__(self, ):
-        super(DatabaseService, self).__init__(
+        super(ActivityUserDatabaseService, self).__init__(
             os.environ['DB_ACTIVITY_USER_LOC'])
 
     def putOrUpdate(self, value, key=None):

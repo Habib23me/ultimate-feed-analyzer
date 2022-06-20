@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 
-from utils import Singleton
+from util import Singleton
 
 
 class BaseEnvironment(metaclass=Singleton):

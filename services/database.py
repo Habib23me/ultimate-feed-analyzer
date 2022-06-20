@@ -56,9 +56,9 @@ class ClusterFeatureDatabaseService(DatabaseService):
 
 
 class ActivityUserDatabaseService(DatabaseService):
-    def __init__(self, ):
-        super(DatabaseService, self).__init__(
-            os.environ['DB_ACTIVITY_USER_LOC'])
+    def __init__(self):
+        super(ActivityUserDatabaseService, self).__init__(
+            db_path= os.environ['DB_ACTIVITY_USER_LOC'])
 
     def putOrUpdate(self, value, key=None):
         # TODO (Fitsum): implement this

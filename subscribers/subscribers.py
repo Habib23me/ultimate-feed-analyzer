@@ -35,7 +35,7 @@ def get_feed_callback(ch, method, properties, body):
     # implement by fitsum
     cluster = 1
     feed = ActivityClusterDatabaseService().getActivitiesByCluster(cluster)
-    RabbitMQService().send('feed_response', feed)
+    RabbitMQService().send('feed_response', {"data":feed,"userId":parsed_body['userId']})
 
 
 # {

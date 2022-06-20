@@ -36,8 +36,8 @@ def get_feed_callback(ch, method, properties, body):
     cluster = EpsilonGreedyEnvironment().select_item(parsed_body['userId'])
     # cluster = 1
     feed = ActivityClusterDatabaseService().getActivitiesByCluster(cluster)
-    RabbitMQService().send('feed_response', {
-        "data": feed, "userId": parsed_body['userId']})
+    RabbitMQService().send('feed_response', json.dumps({
+        "data": feed, "userId": parsed_body['userId']}))
 
 
 # {

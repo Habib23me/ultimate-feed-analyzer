@@ -36,7 +36,7 @@ class RabbitMQService(metaclass=Singleton):
         return {}
 
     def send(self, queue, message):
-        self.channel.queue_declare(queue=queue)
+        self.channel.queue_declare(queue=queue, durable=True)
         self.channel.basic_publish(exchange='',
                                    routing_key=queue,
                                    body=message)

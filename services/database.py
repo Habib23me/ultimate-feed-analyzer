@@ -48,7 +48,7 @@ class ActivityClusterDatabaseService(DatabaseService):
             db_path=os.environ['DB_ACTIVITY_CLUSTER_LOC'])
 
     def getActivitiesByCluster(self, cluster: int):
-        return list(filter(lambda x: x['cluster'] == cluster, self.get_all()))
+        return list(map((lambda x: x['activityId']), list(filter(lambda x: x['cluster'] == cluster, self.get_all()))))
 
     def getActivityCluster(self, activityId):
         return list(filter(lambda x: x['activityId'] == activityId, self.get_all()))[0]['cluster']

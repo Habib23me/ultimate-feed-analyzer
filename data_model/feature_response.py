@@ -14,7 +14,7 @@ class FeatureResponse:
         result["activityId"] = from_str(self.activityId)
         result["score"] = from_float(self.score)
         result["feature"] = from_str(self.feature)
-        result["cluster"]= from_int(self.cluster)
+        result["cluster"]= self.cluster
         return result
     
   def __str__(self):

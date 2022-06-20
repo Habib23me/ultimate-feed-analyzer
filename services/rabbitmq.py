@@ -1,4 +1,4 @@
-from util.Singleton import Singleton
+from util import Singleton
 import pika
 import sys
 import os

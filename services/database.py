@@ -14,7 +14,7 @@ class DatabaseService(metaclass=Singleton):
         self.db = rocksdb3.open_default(db_path)
         print("Connected to Database Service")
 
-    def tuple_to_json(i):
+    def tuple_to_json(self, i):
         return convert_byte_string_to_json(i[1])
 
     def get(self, key):
@@ -34,45 +34,28 @@ class DatabaseService(metaclass=Singleton):
         return key
 
 
-class ActivityClusterDatabaseService(DatabaseService):
-    def __init__(self, ):
-        super(DatabaseService, self).__init__(
-            os.environ['DB_ACTIVITY_CLUSTER_LOC'])
+class ActivityClusterDatabaseService(DatabaseService, metaclass=Singleton):
+    def __init__(self):
+        super(ActivityClusterDatabaseService, self).__init__(
+            db_path=os.environ['DB_ACTIVITY_CLUSTER_LOC'])
 
-    def getActivitiesByCluster(self, cluster: int) -> list:
-        # get all keys from db
-        values = list(self.db.get_iter())
-        return list(map(self.tuple_to_json, values))
+    def getActivitiesByCluster(self, cluster: int):
+        return list(filter(lambda x: x['cluster'] == cluster, self.get_all()))
 
 
 class ClusterFeatureDatabaseService(DatabaseService):
     def __init__(self, ):
-        super(DatabaseService, self).__init__(
-            os.environ['DB_CLUSTER_FEATURE_LOC'])
+        super(ClusterFeatureDatabaseService, self).__init__(
+            db_path=os.environ['DB_CLUSTER_FEATURE_LOC'])
 
-    def getFeaturesByClusterId(self, clusterId: int) -> list:
-        clusterFeatures = []
-        it = self.db.iteritems()
-        it.seek_to_first()
-        # check if there are any items in the db
-        for key, value in it:
-            value = value.decode('utf-8')
-            clusterFeature = ClusterFeature.ClusterFeatureFromString(value)
-            if (clusterFeature.clusterId == clusterId):
-                clusterFeatures.append(clusterFeature)
-        return clusterFeatures
+    def getFeaturesByClusterId(self, clusterId: int):
+        return list(filter(lambda x: x['clusterId'] == clusterId, self.get_all()))
 
-    def getClusterIdForFeature(self, cfs, feature: str) -> int:
-        clusterId = -1
-        type(cfs)
-        for cf in cfs:
-            if (cf.feature == feature):
-                clusterId = cf.clusterId
-                break
-        return clusterId
+    def getClusterIdForFeature(self, feature: str):
+        return list(filter(lambda x: x['feature'] == feature, self.get_all()))
 
 
 class ActivityUserDatabaseService(DatabaseService):
     def __init__(self, ):
-        super(DatabaseService, self).__init__(
-            os.environ['DB_ACTIVITY_USER_LOC'])
+        super(ActivityUserDatabaseService, self).__init__(
+            db_path=os.environ['DB_ACTIVITY_USER_LOC'])

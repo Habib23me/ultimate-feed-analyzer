@@ -1,2 +1,2 @@
-from .database import DatabaseService
+from .database import *
 from .rabbitmq import RabbitMQService

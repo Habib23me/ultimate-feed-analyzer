@@ -15,11 +15,10 @@ from services.rabbitmq import RabbitMQService
 def new_activity_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     activity: Activity = activity_from_str(body.decode())
-    analyzed_data=analyseActivity(activity)
+    analyzed_data = analyseActivity(activity)
     # implement by Habib
-    # get cluster 
+    # get cluster
     # record result to database
-    
 
 
 # {
@@ -28,8 +27,8 @@ def new_activity_callback(ch, method, properties, body):
 def get_feed_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)
-    # implement by fitsum
-    feed = [];
+    # TODO: implement by fitsum
+    feed = []
     # get_feed(parsed_body['user_id'])
     RabbitMQService().send('feed_response', feed)
 

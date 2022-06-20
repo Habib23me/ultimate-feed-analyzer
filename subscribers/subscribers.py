@@ -19,20 +19,22 @@ from services.rabbitmq import RabbitMQService
 def new_activity_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     activity: Activity = activity_from_str(body.decode())
-    analyzed_data=analyseActivity(activity)
+    analyzed_data = analyseActivity(activity)
     for data in analyzed_data:
-        data.cluster=predictCluster(data.feature)
+        data.cluster = predictCluster(data.feature)
         ActivityClusterDatabaseService().put(data.to_dict())
 
 # {
 #   userId: 84c3e94e-ce0d-4721-8443-370b0325abd0,
 # }
+
+
 def get_feed_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)
     # implement by fitsum
-    cluster=1;
-    feed=ActivityClusterDatabaseService().getActivitiesByCluster(cluster)
+    cluster = 1
+    feed = ActivityClusterDatabaseService().getActivitiesByCluster(cluster)
     RabbitMQService().send('feed_response', feed)
 
 
@@ -41,6 +43,8 @@ def get_feed_callback(ch, method, properties, body):
 #   userId: 84c3e94e-ce0d-4721-8443-370b0325abd0,
 #   score: 0.8,
 # }
+
+
 def record_result_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)

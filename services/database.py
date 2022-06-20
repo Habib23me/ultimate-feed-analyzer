@@ -57,5 +57,13 @@ class ClusterFeatureDatabaseService(DatabaseService):
 
 class ActivityUserDatabaseService(DatabaseService):
     def __init__(self, ):
-        super(ActivityUserDatabaseService, self).__init__(
-            db_path=os.environ['DB_ACTIVITY_USER_LOC'])
+        super(DatabaseService, self).__init__(
+            os.environ['DB_ACTIVITY_USER_LOC'])
+
+    def putOrUpdate(self, value, key=None):
+        # TODO (Fitsum): implement this
+        if(key == None):
+            key = str(time())
+        self.db.put(key.encode('utf-8'), convert_json_to_byte_string(value))
+
+        return key

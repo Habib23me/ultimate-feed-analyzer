@@ -25,7 +25,7 @@ def new_activity_callback(ch, method, properties, body):
         ActivityClusterDatabaseService().put(data.to_dict())
 
 # {
-#   user_id: 84c3e94e-ce0d-4721-8443-370b0325abd0,
+#   userId: 84c3e94e-ce0d-4721-8443-370b0325abd0,
 # }
 def get_feed_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
@@ -35,14 +35,15 @@ def get_feed_callback(ch, method, properties, body):
     feed=ActivityClusterDatabaseService().getActivitiesByCluster(cluster)
     RabbitMQService().send('feed_response', feed)
 
+
 # {
-#   activity_id: 4e0fd601-4ecf-471a-ac90-e71db0e68593,
-#   user_id: 84c3e94e-ce0d-4721-8443-370b0325abd0,
+#   activityId: 4e0fd601-4ecf-471a-ac90-e71db0e68593,
+#   userId: 84c3e94e-ce0d-4721-8443-370b0325abd0,
 #   score: 0.8,
 # }
 def record_result_callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     parsed_body = json.loads(body)
-    ActivityUserDatabaseService().putOrUpdate(parsed_body,parsed_body['activity_id']+"_"+parsed_body['user_id'])
+    ActivityUserDatabaseService().putOrUpdate(parsed_body,parsed_body['activityId']+"_"+parsed_body['userId'])
     env = EpsilonGreedyEnvironment()
-    env.record_result(parsed_body['activity_id'], parsed_body['score'])
+    env.record_result(parsed_body['activityId'], parsed_body['score'])

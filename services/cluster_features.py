@@ -7,6 +7,6 @@ def predictCluster(feature:str):
     # print(model.cluster_centers_)
     Y = vectorizer.transform([feature])
     prediction = model.predict(Y)[0];
-    print("cluster: "+prediction);
+    print("cluster: ",prediction);
     return prediction
 
